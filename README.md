@@ -28,14 +28,10 @@ These scripts assume that:
 
  * Kodi user data directory is `/home/.kodi/`.
 
-Once compiled and installed, you can execute Kodi in several ways:
+Once compiled and installed, you can execute Kodi by doing:
 ```
 $ /home/kodi/bin-kodi/lib/kodi/kodi-gbm
 ```
-
-The actual Kodi executable is `/home/kodi/bin-kodi/lib/kodi/kodi-gbm`. The
-first two files are shell scripts that call the actual Kodi executable `kodi-x11`.
-
 
 ## Cloning this repository ##
 
