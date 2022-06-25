@@ -2,6 +2,7 @@
 
 # Creates build directory and configures Kodi build.
 
+libmali/libmali.sh
 mkdir -p /home/kodi/kodi-build
 cd ../kodi-source
 patch -Np1 < ../kodi-install/patches/*.patch
