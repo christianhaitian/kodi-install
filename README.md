@@ -30,14 +30,10 @@ These scripts assume that:
 
 Once compiled and installed, you can execute Kodi in several ways:
 ```
-$ /home/kodi/bin-kodi/bin/kodi
-
-$ /home/kodi/bin-kodi/bin/kodi-standalone
-
-$ /home/kodi/bin-kodi/lib/kodi/kodi-x11
+$ /home/kodi/bin-kodi/lib/kodi/kodi-gbm
 ```
 
-The actual Kodi executable is `/home/kodi/bin-kodi/lib/kodi/kodi-x11`. The
+The actual Kodi executable is `/home/kodi/bin-kodi/lib/kodi/kodi-gbm`. The
 first two files are shell scripts that call the actual Kodi executable `kodi-x11`.
 
 
@@ -51,11 +47,11 @@ If you don't have `git` installed then execute as `root` user:
 To clone this repository:
 ```
 $ cd /home/kodi/
-$ git clone https://github.com/Wintermute0110/KodiInstall.git
+$ git clone https://github.com/christianhaitian/kodi-install
 ```
 
 The Kodi compilation tools will be cloned into the directory 
-`/home/kodi/KodiInstall/`.
+`/home/kodi/kodi-install/`.
 
 
 ## Clone and prepare Kodi source code ##
@@ -97,21 +93,21 @@ The Kodi source code is now ready for compilation.
 First you need to install the build dependencies required to compile Kodi.
 As `root` execute:
 ```
-# cd /home/kodi/KodiInstall
-# ./install-build-dependencies-debian.sh
+# cd /home/kodi/kodi-install
+# ./install-build-dependencies-ubuntu-bionic.sh
 ```
 
 As the `kodi` user, the Kodi build directory needs to be configured
 before compilation:
 ```
-$ cd /home/kodi/KodiInstall/
-$ ./configure-kodi.sh
+$ cd /home/kodi/kodi-install/
+$ ./configure-kodi-ubuntu-bionic.sh
 ```
 
 Now it's time to compile Kodi. This will take a while (about 15 minutes on a
 fast computer):
 ```
-$ ./build-kodi-x11.sh
+$ ./build-kodi-gbm.sh
 ```
 
 Finally, to install Kodi, the Kodi binary addons and the required runtime
@@ -134,7 +130,7 @@ Do not purge the build directory before compiling the binary addons.
 
 To compile all the binary addons:
 ```
-$ cd /home/kodi/KodiInstall/
+$ cd /home/kodi/kodi-install/
 $ ./build-binary-addons-all.sh
 ```
 
@@ -142,7 +138,7 @@ or instead execute this if you are not going to use Kodi personal video
 recorder (PVR) features. This command compiles all binary addons except
 the PVR addons:
 ```
-$ cd /home/kodi/KodiInstall/
+$ cd /home/kodi/kodi-install/
 $ ./build-binary-addons-no-pvr.sh
 ```
 
@@ -167,7 +163,7 @@ compile_core game.libretro.beetle-bsnes
 
 Finally, compile the Libretro cores:
 ```
-$ cd /home/kodi/KodiInstall/
+$ cd /home/kodi/kodi-install/
 $ ./build-binary-addons-libretro-cores.sh
 ```
 
@@ -190,9 +186,9 @@ $ git checkout 17.6-Krypton
 
 Then configure, compile and install Kodi again:
 ```
-$ cd /home/kodi/KodiInstall/
+$ cd /home/kodi/kodi-install/
 $ ./configure-kodi.sh
-$ ./build-kodi-x11.sh
+$ ./build-kodi-gbm.sh
 $ ./install-kodi.sh
 $ ./build-binary-addons-no-pvr.sh
 $ ./build-binary-addons-libretro-cores.sh

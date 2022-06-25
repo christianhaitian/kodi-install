@@ -50,7 +50,7 @@ apt install \
     libltdl-dev \
     liblzo2-dev \
     libmicrohttpd-dev \
-    libmysqlclient-dev \
+    default-libmysqlclient-dev \
     libnfs-dev \
     libogg-dev \
     libpcre3-dev \
