@@ -1,0 +1,13 @@
+diff --git a/addons/skin.estuary/xml/DialogButtonMenu.xml b/addons/skin.estuary/xml/DialogButtonMenu.xml
+index 90839ff75b..c6c8745734 100644
+--- a/addons/skin.estuary/xml/DialogButtonMenu.xml
++++ b/addons/skin.estuary/xml/DialogButtonMenu.xml
+@@ -18,7 +18,7 @@
+ 				<include>ButtonMenuList</include>
+ 				<content>
+ 					<item>
+-						<label>$LOCALIZE[13012]</label>
++						<label>Exit to ArkOS</label>
+ 						<onclick>Quit()</onclick>
+ 						<visible>System.ShowExitButton</visible>
+ 					</item>

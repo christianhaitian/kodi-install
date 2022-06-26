@@ -1,0 +1,97 @@
+diff --git a/system/addon-manifest.xml b/system/addon-manifest.xml
+index e6de83fb02..cc0f1a03bf 100644
+--- a/system/addon-manifest.xml
++++ b/system/addon-manifest.xml
+@@ -56,6 +56,17 @@
+   <addon>xbmc.metadata</addon>
+   <addon>xbmc.python</addon>
+   <addon>xbmc.webinterface</addon>
+-  <addon optional="true">peripheral.joystick</addon>
++  <addon>peripheral.joystick</addon>
++  <addon>peripheral.joystick</addon>
++  <addon>superrepo.kodi.krypton.repositories</addon>
++  <addon>resource.language.fr_fr</addon>
++  <addon>resource.language.de_de</addon>
++  <addon>resource.language.es_es</addon>
++  <addon>resource.language.eu_es</addon>
++  <addon>resource.language.it_it</addon>
++  <addon>resource.language.pt_br</addon>
++  <addon>resource.language.sv_se</addon>
++  <addon>resource.language.tr_tr</addon>
++  <addon>resource.language.zh_cn</addon>
+   <addon optional="true">inputstream.adaptive</addon>
+ </addons>
+diff --git a/system/keymaps/joystick.xml b/system/keymaps/joystick.xml
+index a88b9a2aa5..5870b3b623 100644
+--- a/system/keymaps/joystick.xml
++++ b/system/keymaps/joystick.xml
+@@ -50,7 +50,7 @@
+       <y>FullScreen</y>
+       <start>ActivateWindow(PlayerControls)</start>
+       <back>ActivateWindow(Home)</back>
+-      <guide>ActivateWindow(Home)</guide>
++      <guide>ActivateWindow(10111)</guide>
+       <up>Up</up>
+       <down>Down</down>
+       <right>Right</right>
+diff --git a/xbmc/addons/AddonDatabase.cpp b/xbmc/addons/AddonDatabase.cpp
+index 6de470a9a0..531f224834 100644
+--- a/xbmc/addons/AddonDatabase.cpp
++++ b/xbmc/addons/AddonDatabase.cpp
+@@ -251,6 +251,9 @@ void CAddonDatabase::CreateAnalytics()
+ 
+ void CAddonDatabase::UpdateTables(int version)
+ {
++
++  if(id == "peripheral.joystick") { inSystem = false; }
++
+   if (version < 22)
+   {
+     m_pDS->exec("DROP TABLE system");
+@@ -385,6 +388,9 @@ void CAddonDatabase::SyncInstalled(const std::set<std::string>& ids,
+                                    const std::set<std::string>& system,
+                                    const std::set<std::string>& optional)
+ {
++
++  if(id == "peripheral.joystick") { enable = 1; }
++
+   try
+   {
+     if (!m_pDB)
+@@ -1072,6 +1078,8 @@ bool CAddonDatabase::DisableAddon(const std::string& addonID, AddonDisabledReaso
+     if (!m_pDS)
+       return false;
+ 
++    if(disable && addonID == "peripheral.joystick") return false;
++
+     const std::string sql =
+         PrepareSQL("UPDATE installed SET enabled=0, disabledReason=%d WHERE addonID='%s'",
+                    static_cast<int>(disabledReason), addonID.c_str());
+@@ -1108,6 +1116,9 @@ bool CAddonDatabase::EnableAddon(const std::string& addonID)
+ 
+ bool CAddonDatabase::GetDisabled(std::map<std::string, AddonDisabledReason>& addons)
+ {
++ // always mark the joystick as blacklisted to never update it
++  bool joystickDone = false;
++
+   try
+   {
+     if (!m_pDB)
+@@ -1122,9 +1133,17 @@ bool CAddonDatabase::GetDisabled(std::map<std::string, AddonDisabledReason>& add
+     {
+       addons.insert({m_pDS->fv("addonID").get_asString(),
+                      static_cast<AddonDisabledReason>(m_pDS->fv("disabledReason").get_asInt())});
++      if(m_pDS->fv(0).get_asString() == "peripheral.joystick") {
++	  joystickDone = true;
++      }
+       m_pDS->next();
+     }
+     m_pDS->close();
++
++   if(joystickDone == false) {
++      addons.insert("peripheral.joystick");
++    }
++
+     return true;
+   }
+   catch (...)
