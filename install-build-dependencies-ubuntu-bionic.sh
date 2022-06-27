@@ -4,17 +4,17 @@
 #
 
 # Install build tools
-apt install \
+apt -y install \
     build-essential debhelper \
     autoconf automake autopoint gettext autotools-dev cmake curl \
     default-jre doxygen gawk gdc gperf libtool \
     lsb-release swig unzip yasm zip ccache
 
 # Python stuff
-apt install python-dev python-pil
+apt -y install python-dev python-pil
 
 # Install build libraries (alphabetical order0
-apt install \
+apt -y install \
     libasound2-dev \
     libass-dev \
     libavahi-client-dev \
