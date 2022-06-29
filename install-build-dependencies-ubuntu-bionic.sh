@@ -36,6 +36,7 @@ apt -y install \
     libfribidi-dev \
     libfstrcmp-dev \
     libfmt-dev \
+    libinput-dev \
     libgcrypt-dev \
     libgif-dev \
     libgles2-mesa-dev \
@@ -43,6 +44,7 @@ apt -y install \
     libglu1-mesa-dev \
     libgnutls28-dev \
     libgpg-error-dev \
+    libgtest-dev \
     libiso9660-dev \
     libjpeg-dev \
     liblcms2-dev \
@@ -76,3 +78,27 @@ apt -y install \
     rapidjson-dev \
     uuid-dev \
     zlib1g-dev
+
+#Build, Make, and isntall latest version of FMT Library
+git clone --recursive https://github.com/fmtlib/fmt.git
+cd fmt
+git checkout 6.2.1
+mkdir build
+cd build
+cmake ..
+make -j$(nproc)
+make install
+cd ../../
+rm -rf fmt
+
+#Build, Make, and isntall latest version of spdlog Library
+git clone --recursive https://github.com/gabime/spdlog.git
+cd spdlog
+git checkout v1.8.2
+mkdir build
+cd build
+cmake ..
+make -j$(nproc)
+make install
+cd ../../
+rm -rf spdlog
