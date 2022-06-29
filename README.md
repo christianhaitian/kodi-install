@@ -78,7 +78,7 @@ Each tag corresponds to a released version of Kodi. Now, tell `git` to set the
 Kodi source code to the version you want:
 ```
 $ cd /home/kodi/kodi-source/
-$ git checkout 19.4-Krypton
+$ git checkout 19.4-Matrix
 ```
 
 The Kodi source code is now ready for compilation.

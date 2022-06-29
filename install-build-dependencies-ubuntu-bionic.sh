@@ -22,6 +22,7 @@ apt -y install \
     libbluetooth-dev \
     libbluray-dev \
     libbz2-dev \
+    libcap-dev \
     libcdio-dev \
     libcec-dev \
     libcrossguid-dev \
