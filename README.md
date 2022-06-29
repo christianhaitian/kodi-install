@@ -9,7 +9,6 @@
 * **[Compiling the Kodi binary addons](#compiling-the-kodi-binary-addons)**
 * **[Update Kodi](#update-kodi)**
 * **[Notes](#notes)**
-* **[Current bugs](#current-bugs)**
 
 ## Readme me first ##
 
