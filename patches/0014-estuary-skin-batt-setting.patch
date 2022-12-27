@@ -1,0 +1,74 @@
+diff --git a/addons/skin.estuary/xml/Custom_1109_TopBarOverlay.xml b/addons/skin.estuary/xml/Custom_1109_TopBarOverlay.xml
+index 18d88c4b99..92b559c73c 100644
+--- a/addons/skin.estuary/xml/Custom_1109_TopBarOverlay.xml
++++ b/addons/skin.estuary/xml/Custom_1109_TopBarOverlay.xml
+@@ -209,6 +209,17 @@
+ 			<control type="group">
+ 				<visible>!Window.IsVisible(extendedprogressdialog)</visible>
+ 				<animation effect="fade" time="150">VisibleChange</animation>
++				<control type="label">
++					<visible>Skin.HasSetting(show_battlife)</visible>
++					<font>font_clock</font>
++					<shadowcolor>text_shadow</shadowcolor>
++					<top>50</top>
++					<left>30</left>
++					<height>200</height>
++					<width>600</width>
++					<align>middle</align>
++					<label>Battery Life: $INFO[System.BatteryLevel]</label>
++				</control>
+ 				<control type="label">
+ 					<font>font_clock</font>
+ 					<shadowcolor>text_shadow</shadowcolor>
+@@ -258,3 +269,4 @@
+ 		</control>
+ 	</controls>
+ </window>
++
+diff --git a/addons/skin.estuary/xml/Includes.xml b/addons/skin.estuary/xml/Includes.xml
+index c2ff671d29..05df717492 100644
+--- a/addons/skin.estuary/xml/Includes.xml
++++ b/addons/skin.estuary/xml/Includes.xml
+@@ -1018,6 +1018,15 @@
+ 						<texture>icons/power.png</texture>
+ 						<visible>System.HasAlarm(shutdowntimer)</visible>
+ 					</control>
++					<control type="label">
++						<visible>Skin.HasSetting(show_battlife)</visible>
++						<font>font75</font>
++						<top>15</top>
++						<height>50</height>
++						<width>auto</width>
++						<aligny>left</aligny>
++						<label>Bat: $INFO[System.BatteryLevel] </label>
++					</control>
+ 					<control type="label">
+ 						<height>50</height>
+ 						<width>auto</width>
+@@ -1574,3 +1583,4 @@
+ 		</focusedlayout>
+ 	</include>
+ </includes>
++
+diff --git a/addons/skin.estuary/xml/SkinSettings.xml b/addons/skin.estuary/xml/SkinSettings.xml
+index 3e81afbb49..16c1794b58 100644
+--- a/addons/skin.estuary/xml/SkinSettings.xml
++++ b/addons/skin.estuary/xml/SkinSettings.xml
+@@ -48,6 +48,12 @@
+ 					<onclick>Skin.ToggleSetting(touchmode)</onclick>
+ 					<selected>Skin.HasSetting(touchmode)</selected>
+ 				</control>
++				<control type="radiobutton" id="710">
++					<label>Show Battery Life</label>
++					<include>DefaultSettingButton</include>
++					<onclick>Skin.ToggleSetting(show_battlife)</onclick>
++					<selected>Skin.HasSetting(show_battlife)</selected>
++				</control>
+ 				<control type="radiobutton" id="704">
+ 					<label>$LOCALIZE[31093]</label>
+ 					<include>DefaultSettingButton</include>
+@@ -369,3 +375,4 @@
+ 		</control>
+ 	</controls>
+ </window>
++

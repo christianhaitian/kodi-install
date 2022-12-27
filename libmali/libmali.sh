@@ -10,6 +10,7 @@ rm libOpenCL*
 rm libwayland-egl*
 ln -sf libmali-bifrost-g52-g2p0-gbm.so libMali.so
 ln -sf libMali.so libEGL.so
+ln -sf libMali.so libEGL.so.1
 ln -sf libMali.so libGLES_CM.so
 ln -sf libMali.so libGLES_CM.so.1
 ln -sf libMali.so libGLESv1_CM.so

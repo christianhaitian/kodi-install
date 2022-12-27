@@ -1,0 +1,26 @@
+diff --git a/xbmc/utils/SystemInfo.cpp b/xbmc/utils/SystemInfo.cpp
+index 9642c49596..c911dedc93 100644
+--- a/xbmc/utils/SystemInfo.cpp
++++ b/xbmc/utils/SystemInfo.cpp
+@@ -311,7 +311,20 @@ std::string CSysInfoJob::GetVideoEncoder()
+ 
+ std::string CSysInfoJob::GetBatteryLevel()
+ {
+-  return StringUtils::Format("%d%%", CServiceBroker::GetPowerManager().BatteryLevel());
++  std::ifstream myfile;
++  myfile.open("/sys/class/power_supply/battery/capacity");
++  std::string myline;
++  if ( myfile.is_open() ) {
++    while ( myfile ) { // equivalent to myfile.good()
++    std::getline (myfile, myline);
++    return myline + "%";
++    }
++  }
++  else {
++  return 0 + "%";
++  }
++
++//  return StringUtils::Format("%d%%", CServiceBroker::GetPowerManager().BatteryLevel());
+ }
+ 
+ bool CSysInfoJob::SystemUpTime(int iInputMinutes, int &iMinutes, int &iHours, int &iDays)
