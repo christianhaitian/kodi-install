@@ -1,8 +1,8 @@
-diff --git a/xbmc/Application.cpp b/xbmc/Application.cpp
-index ad22f17890..f7d6dae76a 100644
---- a/xbmc/Application.cpp
-+++ b/xbmc/Application.cpp
-@@ -4103,7 +4103,8 @@ bool CApplication::OnMessage(CGUIMessage& message)
+diff --git a/xbmc/application/Application.cpp b/xbmc/application/Application.cpp
+index 0765cf3723..09e0e467ff 100644
+--- a/xbmc/application/Application.cpp
++++ b/xbmc/application/Application.cpp
+@@ -2942,7 +2942,8 @@ bool CApplication::OnMessage(CGUIMessage& message)
        return true;
  
    case GUI_MSG_PLAYBACK_ERROR:
@@ -12,16 +12,14 @@ index ad22f17890..f7d6dae76a 100644
      return true;
  
    case GUI_MSG_PLAYLISTPLAYER_STARTED:
-diff --git a/xbmc/platform/linux/PlatformLinux.h b/xbmc/platform/linux/PlatformLinux.h
-index c45d41143a..95c68bdefe 100644
---- a/xbmc/platform/linux/PlatformLinux.h
-+++ b/xbmc/platform/linux/PlatformLinux.h
-@@ -21,7 +21,7 @@ public:
-   ~CPlatformLinux() override = default;
+@@ -3077,6 +3078,10 @@ void CApplication::ConfigureAndEnableAddons()
  
-   bool Init() override;
--  bool IsConfigureAddonsAtStartupEnabled() override { return true; };
-+  bool IsConfigureAddonsAtStartupEnabled() override { return false; };
- 
- private:
-   std::unique_ptr<OPTIONALS::CLircContainer, OPTIONALS::delete_CLircContainer> m_lirc;
+       if (isConfigureAddonsAtStartupEnabled)
+       {
++        if (addon->Type() == AddonType::PVRDLL) // skip and do not initialized PVR plugins
++        {
++          continue;
++        }
+         if (HELPERS::ShowYesNoDialogLines(CVariant{24039}, // Disabled add-ons
+                                           CVariant{24059}, // Would you like to enable this add-on?
+                                           CVariant{addon->Name()}) == DialogResponse::CHOICE_YES)

@@ -1,12 +1,12 @@
 diff --git a/xbmc/utils/SystemInfo.cpp b/xbmc/utils/SystemInfo.cpp
-index 9642c49596..c911dedc93 100644
+index e85c41546f..42b33f0db4 100644
 --- a/xbmc/utils/SystemInfo.cpp
 +++ b/xbmc/utils/SystemInfo.cpp
-@@ -311,7 +311,20 @@ std::string CSysInfoJob::GetVideoEncoder()
+@@ -315,7 +315,20 @@ std::string CSysInfoJob::GetVideoEncoder()
  
  std::string CSysInfoJob::GetBatteryLevel()
  {
--  return StringUtils::Format("%d%%", CServiceBroker::GetPowerManager().BatteryLevel());
+-  return StringUtils::Format("{}%", CServiceBroker::GetPowerManager().BatteryLevel());
 +  std::ifstream myfile;
 +  myfile.open("/sys/class/power_supply/battery/capacity");
 +  std::string myline;

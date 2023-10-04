@@ -1,0 +1,53 @@
+diff --git a/system/addon-manifest.xml b/system/addon-manifest.xml
+index 7df13a6d6f..6663b63fbb 100644
+--- a/system/addon-manifest.xml
++++ b/system/addon-manifest.xml
+@@ -53,7 +53,45 @@
+   <addon>xbmc.metadata</addon>
+   <addon>xbmc.python</addon>
+   <addon>xbmc.webinterface</addon>
+-  <addon optional="true">inputstream.adaptive</addon>
+-  <addon optional="true">peripheral.joystick</addon>
+-  <addon optional="true">service.xbmc.versioncheck</addon>
++  <addon optional="false">audiodecoder.2sf</addon>
++  <addon optional="false">audiodecoder.asap</addon>
++  <addon optional="false">audiodecoder.dumb</addon>
++  <addon optional="false">audiodecoder.gme</addon>
++  <addon optional="false">audiodecoder.gsf</addon>
++  <addon optional="false">audiodecoder.hvl</addon>
++  <addon optional="false">audiodecoder.modplug</addon>
++  <addon optional="false">audiodecoder.ncsf</addon>
++  <addon optional="false">audiodecoder.nosefart</addon>
++  <addon optional="false">audiodecoder.organya</addon>
++  <addon optional="false">audiodecoder.qsf</addon>
++  <addon optional="false">audiodecoder.sacd</addon>
++  <addon optional="false">audiodecoder.sidplay</addon>
++  <addon optional="false">audiodecoder.snesapu</addon>
++  <addon optional="false">audiodecoder.ssf</addon>
++  <addon optional="false">audiodecoder.stsound</addon>
++  <addon optional="false">audiodecoder.timidity</addon>
++  <addon optional="false">audiodecoder.upse</addon>
++  <addon optional="false">audiodecoder.usf</addon>
++  <addon optional="false">audiodecoder.vgmstream</addon>
++  <addon optional="false">audiodecoder.wsr</addon>
++  <addon optional="false">audioencoder.flac</addon>
++  <addon optional="false">audioencoder.lame</addon>
++  <addon optional="false">audioencoder.vorbis</addon>
++  <addon optional="false">audioencoder.wav</addon>
++  <addon optional="false">inputstream.ffmpegdirect</addon>
++  <addon optional="false">inputstream.rtmp</addon>
++  <addon optional="false">peripheral.joystick</addon>
++  <addon optional="false">peripheral.xarcade</addon>
++  <addon optional="false">service.xbmc.versioncheck</addon>
++  <addon optional="false">vfs.rar</addon>
++  <addon optional="false">visualization.fishbmc</addon>
++  <addon optional="false">visualization.goom</addon>
++  <addon optional="false">visualization.matrix</addon>
++  <addon optional="false">visualization.pictureit</addon>
++  <addon optional="false">visualization.projectm</addon>
++  <addon optional="false">visualization.shadertoy</addon>
++  <addon optional="false">visualization.spectrum</addon>
++  <addon optional="false">visualization.starburst</addon>
++  <addon optional="false">visualization.waveform</addon>
+ </addons>
++

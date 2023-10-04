@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Builds Kodi for X11.
+# Builds Kodi for GBM
 
 num_proc=`nproc`
 echo "Using $num_proc processors"

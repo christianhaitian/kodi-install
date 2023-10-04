@@ -5,7 +5,7 @@
 
 # Configure Kodi standard repository for binary addons.
 repofname="/home/kodi/kodi-source/cmake/addons/bootstrap/repositories/binary-addons.txt"
-bin_addons_repo="binary-addons https://github.com/xbmc/repo-binary-addons.git Matrix"
+bin_addons_repo="binary-addons https://github.com/xbmc/repo-binary-addons.git Nexus"
 rm -f $repofname
 # -n no trailing newline
 echo -n $bin_addons_repo >> $repofname
