@@ -35,86 +35,14 @@ Once compiled and installed, you can execute Kodi by doing:
 $ /home/kodi/bin-kodi/lib/kodi/kodi-gbm
 ```
 
-## Cloning this repository ##
 
-If you don't have `git` installed then execute as `root` user:
+To compile Kodi for ArkOS. This will take a while.
 ```
-# apt-get install git
+$ ./ArkOS-Kodi-Build.sh
 ```
+The generate executable and addons will be located in the `/home/kodi/ForArkOS` directory.
 
-To clone this repository:
-```
-$ cd /home/kodi/
-$ git clone https://github.com/christianhaitian/kodi-install
-```
-
-The Kodi compilation tools will be cloned into the directory 
-`/home/kodi/kodi-install/`.
-
-
-## Clone and prepare Kodi source code ##
-
-As the `kodi` user clone the Kodi source code. This will take a while:
-```
-$ cd /home/kodi/
-$ git clone https://github.com/xbmc/xbmc.git kodi-source
-```
-
-If you want to compile a particular version of Kodi first have a look at the
-tags in the repository:
-```
-$ cd /home/kodi/kodi-source/
-$ git tag
-...
-16.0-Jarvis
-17.0-Krypton
-17.6-Krypton
-18.0b4-Leia
-18.0b5-Leia
-18.0-Leia
-...
-$ 
-```
-
-Each tag corresponds to a released version of Kodi. Now, tell `git` to set the
-Kodi source code to the version you want:
-```
-$ cd /home/kodi/kodi-source/
-$ git checkout 19.4-Matrix
-```
-
-The Kodi source code is now ready for compilation.
-
-
-## Compile and installing Kodi for the first time ##
-
-First you need to install the build dependencies required to compile Kodi.
-As `root` execute:
-```
-# cd /home/kodi/kodi-install
-# ./install-build-dependencies-ubuntu-bionic.sh
-```
-
-As the `kodi` user, the Kodi build directory needs to be configured
-before compilation:
-```
-$ cd /home/kodi/kodi-install/
-$ ./configure-kodi-ubuntu-bionic.sh
-```
-
-Now it's time to compile Kodi. This will take a while (about 15 minutes on a
-fast computer):
-```
-$ ./build-kodi-gbm.sh
-```
-
-Finally, to install Kodi, the Kodi binary addons and the required runtime
-files like the default skin execute:
-```
-$ ./install-kodi.sh
-```
-
-The first time you execute Kodi the userdata directory `/home/.kodi/` will be created.
+The first time you execute Kodi the userdata directory `/home/ark/.kodi/` will be created.
 
 Now that Kodi is installed you can safely delete the Kodi build directory to save disk space:
 ```
@@ -123,21 +51,6 @@ $ ./purge-build-directory.sh
 
 Do not purge the build directory before compiling the binary addons.
 
-
-## Compiling the Kodi binary addons
-
-To compile all the binary addons:
-```
-$ cd /home/kodi/kodi-install/
-$ ./build-binary-addons-arkos.sh
-```
-or instead execute this if you are not going to use Kodi personal video
-recorder (PVR) features. This command compiles all binary addons except
-the PVR addons:
-```
-$ cd /home/kodi/kodi-install/
-$ ./build-binary-addons-no-pvr.sh
-```
 
 the binary addons are automatically installed in `/home/kodi/bin-kodi/` after compilation.
 
