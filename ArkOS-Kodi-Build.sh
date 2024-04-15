@@ -8,7 +8,7 @@ else
   echo ""
   echo "Please provide the git-tag (such as 20.3-Nexus) of kodi you'd like to build"
   echo "Some possible values are as follows:"
-  git ls-remote https://github.com/xbmc/xbmc.git --h --sort origin "refs/tags/*" | cut -d "/" -f3 | grep "Nexus\|Matrix"
+  git ls-remote https://github.com/xbmc/xbmc.git --h --sort origin "refs/tags/*" | cut -d "/" -f3 | grep "Nexus\|Matrix\|Omega"
   echo ""
   exit 1
 fi
