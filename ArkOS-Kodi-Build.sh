@@ -80,7 +80,7 @@ cd ../kodi-build
 if [ -d "/home/kodi/bin-kodi" ]; then
   rm -rf /home/kodi/bin-kodi
 fi
-cmake ../kodi-source -DCMAKE_INSTALL_PREFIX=/home/kodi/bin-kodi -DENABLE_INTERNAL_FLATBUFFERS=ON -DENABLE_INTERNAL_DAV1D=ON -DCORE_PLATFORM_NAME=gbm -DAPP_RENDER_SYSTEM=gles
+cmake ../kodi-source -DCMAKE_INSTALL_PREFIX=/home/kodi/bin-kodi -DENABLE_INTERNAL_FLATBUFFERS=ON -DENABLE_INTERNAL_FMT=ON -DENABLE_INTERNAL_SPDLOG=ON -DENABLE_INTERNAL_DAV1D=ON -DCORE_PLATFORM_NAME=gbm -DAPP_RENDER_SYSTEM=gles
 if [ $? != 0 ]; then
   echo ""
   echo "There was an issue with configuring the kodi source.  Stopping here."
@@ -91,6 +91,7 @@ fi
 num_proc=`nproc`
 echo "Using $num_proc threads"
 cmake --build . -- -j$num_proc
+#cmake --build . --
 if [ $? != 0 ]; then
   echo ""
   echo "There was an issue with building the kodi source for the $BRANCH branch.  Stopping here."
@@ -128,13 +129,36 @@ mkdir inputstream.adaptive/build
 cd inputstream.adaptive/build
 cmake -DADDONS_TO_BUILD=inputstream.adaptive -DADDON_SRC_PREFIX=../.. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/kodi/bin-kodi/ -DPACKAGE_ZIP=1 /home/kodi/kodi-source/cmake/addons/
 # This sed of inputstream is needed or it won't build for some reason.
-sed -i -e '/if defined(__linux__) && defined(__aarch64__) && !defined(ANDROID)/,+12d' ../wvdecrypter/wvdecrypter.cpp
-make -j5
+sed -i -e '/if defined(__linux__) && (defined(__aarch64__) || defined(__arm64__))/,+13d' ../lib/cdm_aarch64/cdm_loader.cpp
+make -j$num_proc
 mkdir /home/kodi/bin-kodi/lib/kodi/addons/inputstream.adaptive
 mv -f /home/kodi/bin-kodi/inputstream.adaptive/inputstream.adaptive.so* /home/kodi/bin-kodi/lib/kodi/addons/inputstream.adaptive/.
 mv -f /home/kodi/bin-kodi/inputstream.adaptive/libssd_wv.so /home/kodi/bin-kodi/lib/kodi/addons/inputstream.adaptive/.
 mkdir /home/kodi/bin-kodi/share/kodi/addons/inputstream.adaptive
 mv -f /home/kodi/bin-kodi/inputstream.adaptive/* /home/kodi/bin-kodi/share/kodi/addons/inputstream.adaptive/.
+
+# inputstream.ffmpegdirect has to be built separately because it fails to build due to a minor autotools issue with README vs README.md
+# There's a PR in place to address this as as of 5/11/2024 so this may not be necessary anymore in a little while
+cd ..
+if [ -d "inputstream.ffmpegdirect" ]; then
+  rm -rf inputstream.ffmpegdirect
+fi
+git clone --branch $BRANCH https://github.com/xbmc/inputstream.ffmpegdirect.git
+wget https://patch-diff.githubusercontent.com/raw/xbmc/inputstream.ffmpegdirect/pull/297.patch -O inputstream.ffmpegdirect/depends/common/libzvbi/0010-fix-building-without-README.patch
+mkdir inputstream.ffmpegdirect/build
+cd inputstream.ffmpegdirect/build
+cmake -DADDONS_TO_BUILD=inputstream.ffmpegdirect -DADDON_SRC_PREFIX=../.. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/kodi/bin-kodi/ -DPACKAGE_ZIP=1 /home/kodi/kodi-source/cmake/addons/
+make -j$num_proc
+if [[ $? != "0" ]]; then
+  printf "hmmm...building the ffmpegdirect inputstream addon failed.  Let's try a sed trick to see if that solves the issue"
+  sleep 5
+  sed -i "/AM_INIT_AUTOMAKE(\[1.16 check-news dist-bzip2\])/c\AM_INIT_AUTOMAKE(\[1.16 check-news dist-bzip2 foreign\])" build/libzvbi/src/libzvbi/configure.ac
+  make -j$num_proc
+fi
+mkdir /home/kodi/bin-kodi/lib/kodi/addons/inputstream.ffmpegdirect
+mv -f /home/kodi/bin-kodi/inputstream.ffmpegdirect/inputstream.ffmpegdirect.so* /home/kodi/bin-kodi/lib/kodi/addons/inputstream.ffmpegdirect/.
+mkdir /home/kodi/bin-kodi/share/kodi/addons/inputstream.ffmpegdirect
+mv -f /home/kodi/bin-kodi/inputstream.ffmpegdirect/* /home/kodi/bin-kodi/share/kodi/addons/inputstream.ffmpegdirect/.
 
 # Finally, put everything in place so it can be copied into the ArkOS opt/kodi folder and overwrite the existing setup
 cd /home/kodi

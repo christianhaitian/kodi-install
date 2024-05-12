@@ -13,8 +13,9 @@ apt -y install \
 # Python stuff
 apt -y install python-dev python-pil
 
-# Install build libraries (alphabetical order0
+# Install build libraries (alphabetical order)
 apt -y install \
+    hwdata \
     libasound2-dev \
     libass-dev \
     libavahi-client-dev \
@@ -67,6 +68,7 @@ apt -y install \
     libtag1-dev \
     libtiff5-dev \
     libtinyxml-dev \
+    libtinyxml2-dev \
     libudev-dev \
     libunistring-dev \
     libva-dev \
@@ -80,7 +82,7 @@ apt -y install \
     uuid-dev \
     zlib1g-dev
 
-#Build, Make, and isntall latest version of FMT Library
+#Build, Make, and install latest version of FMT Library
 git clone --recursive https://github.com/fmtlib/fmt.git
 cd fmt
 git checkout 6.2.1
@@ -92,7 +94,7 @@ make install
 cd ../../
 rm -rf fmt
 
-#Build, Make, and isntall latest version of spdlog Library
+#Build, Make, and install latest version of spdlog Library
 git clone --recursive https://github.com/gabime/spdlog.git
 cd spdlog
 git checkout v1.8.2
@@ -103,3 +105,29 @@ make -j$(nproc)
 make install
 cd ../../
 rm -rf spdlog
+
+#Build, Make, and install latest version of libass Library
+git clone --recursive https://github.com/libass/libass.git
+cd libass
+git checkout 0.17.1
+./configure --prefix=/usr --disable-static
+make -j$(nproc)
+make install
+cd ../
+rm -rf libass
+cd /usr/lib/aarch64-linux-gnu
+cp /usr/lib/libass.* .
+ln -sf libass.so.9.2.1 libass.so
+ln -sf libass.so.9.2.1 libass.so.9
+sed -i "/Version:/c\Version: 0.17.1" /usr/lib/aarch64-linux-gnu/pkgconfig/libass.pc
+cd /home/kodi/kodi-install
+
+#Install udpated meson
+git clone --recursive https://github.com/mesonbuild/meson.git /usr/meson
+sudo rm -f /usr/bin/meson
+sudo ln -s /usr/meson/meson.py /usr/bin/meson
+
+#Install latest fmt header files
+git clone --recursive https://github.com/fmtlib/fmt.git
+cp -rf fmt/include/fmt/* /usr/include/fmt/.
+rm -rf fmt
