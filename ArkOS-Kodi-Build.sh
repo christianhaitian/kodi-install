@@ -139,26 +139,26 @@ mv -f /home/kodi/bin-kodi/inputstream.adaptive/* /home/kodi/bin-kodi/share/kodi/
 
 # inputstream.ffmpegdirect has to be built separately because it fails to build due to a minor autotools issue with README vs README.md
 # There's a PR in place to address this as as of 5/11/2024 so this may not be necessary anymore in a little while
-cd ..
-if [ -d "inputstream.ffmpegdirect" ]; then
-  rm -rf inputstream.ffmpegdirect
-fi
-git clone --branch $BRANCH https://github.com/xbmc/inputstream.ffmpegdirect.git
-wget https://patch-diff.githubusercontent.com/raw/xbmc/inputstream.ffmpegdirect/pull/297.patch -O inputstream.ffmpegdirect/depends/common/libzvbi/0010-fix-building-without-README.patch
-mkdir inputstream.ffmpegdirect/build
-cd inputstream.ffmpegdirect/build
-cmake -DADDONS_TO_BUILD=inputstream.ffmpegdirect -DADDON_SRC_PREFIX=../.. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/kodi/bin-kodi/ -DPACKAGE_ZIP=1 /home/kodi/kodi-source/cmake/addons/
-make -j$num_proc
-if [[ $? != "0" ]]; then
-  printf "hmmm...building the ffmpegdirect inputstream addon failed.  Let's try a sed trick to see if that solves the issue"
-  sleep 5
-  sed -i "/AM_INIT_AUTOMAKE(\[1.16 check-news dist-bzip2\])/c\AM_INIT_AUTOMAKE(\[1.16 check-news dist-bzip2 foreign\])" build/libzvbi/src/libzvbi/configure.ac
-  make -j$num_proc
-fi
-mkdir /home/kodi/bin-kodi/lib/kodi/addons/inputstream.ffmpegdirect
-mv -f /home/kodi/bin-kodi/inputstream.ffmpegdirect/inputstream.ffmpegdirect.so* /home/kodi/bin-kodi/lib/kodi/addons/inputstream.ffmpegdirect/.
-mkdir /home/kodi/bin-kodi/share/kodi/addons/inputstream.ffmpegdirect
-mv -f /home/kodi/bin-kodi/inputstream.ffmpegdirect/* /home/kodi/bin-kodi/share/kodi/addons/inputstream.ffmpegdirect/.
+#cd ..
+#if [ -d "inputstream.ffmpegdirect" ]; then
+#  rm -rf inputstream.ffmpegdirect
+#fi
+#git clone --branch $BRANCH https://github.com/xbmc/inputstream.ffmpegdirect.git
+#wget https://patch-diff.githubusercontent.com/raw/xbmc/inputstream.ffmpegdirect/pull/297.patch -O inputstream.ffmpegdirect/depends/common/libzvbi/0010-fix-building-without-README.patch
+#mkdir inputstream.ffmpegdirect/build
+#cd inputstream.ffmpegdirect/build
+#cmake -DADDONS_TO_BUILD=inputstream.ffmpegdirect -DADDON_SRC_PREFIX=../.. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/kodi/bin-kodi/ -DPACKAGE_ZIP=1 /home/kodi/kodi-source/cmake/addons/
+#make -j$num_proc
+#if [[ $? != "0" ]]; then
+  #printf "hmmm...building the ffmpegdirect inputstream addon failed.  Let's try a sed trick to see if that solves the issue"
+  #sleep 5
+  #sed -i "/AM_INIT_AUTOMAKE(\[1.16 check-news dist-bzip2\])/c\AM_INIT_AUTOMAKE(\[1.16 check-news dist-bzip2 foreign\])" build/libzvbi/src/libzvbi/configure.ac
+  #make -j$num_proc
+#fi
+#mkdir /home/kodi/bin-kodi/lib/kodi/addons/inputstream.ffmpegdirect
+#mv -f /home/kodi/bin-kodi/inputstream.ffmpegdirect/inputstream.ffmpegdirect.so* /home/kodi/bin-kodi/lib/kodi/addons/inputstream.ffmpegdirect/.
+#mkdir /home/kodi/bin-kodi/share/kodi/addons/inputstream.ffmpegdirect
+#mv -f /home/kodi/bin-kodi/inputstream.ffmpegdirect/* /home/kodi/bin-kodi/share/kodi/addons/inputstream.ffmpegdirect/.
 
 # Finally, put everything in place so it can be copied into the ArkOS opt/kodi folder and overwrite the existing setup
 cd /home/kodi
