@@ -129,7 +129,11 @@ mkdir inputstream.adaptive/build
 cd inputstream.adaptive/build
 cmake -DADDONS_TO_BUILD=inputstream.adaptive -DADDON_SRC_PREFIX=../.. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/kodi/bin-kodi/ -DPACKAGE_ZIP=1 /home/kodi/kodi-source/cmake/addons/
 # This sed of inputstream is needed or it won't build for some reason.
-sed -i -e '/if defined(__linux__) && (defined(__aarch64__) || defined(__arm64__))/,+13d' ../lib/cdm_aarch64/cdm_loader.cpp
+if [[ "$BRANCH" == "Nexus" ]]; then
+  sed -i -e '/if defined(__linux__) && defined(__aarch64__) && !defined(ANDROID)/,+12d' ../wvdecrypter/wvdecrypter.cpp
+elif [[ "$BRANCH" == "Omega" ]]; then
+  sed -i -e '/if defined(__linux__) && (defined(__aarch64__) || defined(__arm64__))/,+13d' ../lib/cdm_aarch64/cdm_loader.cpp
+fi
 make -j$num_proc
 mkdir /home/kodi/bin-kodi/lib/kodi/addons/inputstream.adaptive
 mv -f /home/kodi/bin-kodi/inputstream.adaptive/inputstream.adaptive.so* /home/kodi/bin-kodi/lib/kodi/addons/inputstream.adaptive/.
@@ -141,12 +145,14 @@ mv -f /home/kodi/bin-kodi/inputstream.adaptive/* /home/kodi/bin-kodi/share/kodi/
 # There's a PR in place to address this as as of 5/11/2024 so this may not be necessary anymore in a little while
 #cd ..
 #if [ -d "inputstream.ffmpegdirect" ]; then
-#  rm -rf inputstream.ffmpegdirect
+  #rm -rf inputstream.ffmpegdirect
 #fi
 #git clone --branch $BRANCH https://github.com/xbmc/inputstream.ffmpegdirect.git
 #wget https://patch-diff.githubusercontent.com/raw/xbmc/inputstream.ffmpegdirect/pull/297.patch -O inputstream.ffmpegdirect/depends/common/libzvbi/0010-fix-building-without-README.patch
 #mkdir inputstream.ffmpegdirect/build
-#cd inputstream.ffmpegdirect/build
+#cd inputstream.ffmpegdirect
+#patch -Np1 < ../kodi-install/patches/inputstream-ffmpegdirect/inputstream-ffmpegdirect.patch
+#cd build
 #cmake -DADDONS_TO_BUILD=inputstream.ffmpegdirect -DADDON_SRC_PREFIX=../.. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/kodi/bin-kodi/ -DPACKAGE_ZIP=1 /home/kodi/kodi-source/cmake/addons/
 #make -j$num_proc
 #if [[ $? != "0" ]]; then
