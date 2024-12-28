@@ -178,13 +178,19 @@ mkdir -p /home/kodi/ForArkOS/opt/kodi/share/kodi/addons
 # Let's strip and copy the kodi gbm executable
 strip /home/kodi/kodi-build/kodi-gbm
 cp -fv /home/kodi/kodi-build/kodi-gbm /home/kodi/ForArkOS/opt/kodi/lib/kodi/kodi-gbm
-# Let's copy the necessary addons needed to successfylly launch kodi
+# Let's copy the necessary addons needed to successfully launch kodi
 cp -Rfv /home/kodi/kodi-build/addons/* /home/kodi/ForArkOS/opt/kodi/share/kodi/addons/.
+cp -Rfv /home/kodi/kodi-build/media/ /home/kodi/ForArkOS/opt/kodi/share/kodi/.
+cp -Rfv /home/kodi/kodi-build/system/ /home/kodi/ForArkOS/opt/kodi/share/kodi/.
 # Let's copy the additional binary addons config files built 
 cp -Rfv /home/kodi/bin-kodi/share/kodi/addons/* /home/kodi/ForArkOS/opt/kodi/share/kodi/addons/.
 # Let's finally copy the additional binary addon libs
 cp -Rfv /home/kodi/bin-kodi/lib/* /home/kodi/ForArkOS/opt/kodi/lib/.
-
+# As an added benefit, create the .xz file for ease of updating ArkOS
+cd /home/kodi/ForArkOS
+VER_NUM=$(echo $KODI_SOURCE_TAG | sed 's/\-.*//')
+tar -cJvf ../Kodi-${VER_NUM}.tar.xz *
+cd /home/kodi
 echo ""
 echo "Done! Check /home/kodi/ForArkOS and verify the kodi-gbm binary and addon files are in there and ready to be copied to ArkOS"
 echo ""
