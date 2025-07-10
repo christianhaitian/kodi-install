@@ -62,7 +62,6 @@ fi
 # Creates build directory and configures Kodi build.
 
 cd ../kodi-install
-libmali/libmali.sh
 if [ -d "/home/ark/kodi/kodi-build" ]; then
   rm -rf /home/ark/kodi/kodi-build/*
 else
