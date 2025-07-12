@@ -122,26 +122,26 @@ rm -f /home/ark/kodi/kodi-source/tools/depends/target/binary-addons/.installed-n
 make -j$num_proc -C tools/depends/target/binary-addons PREFIX=/home/ark/kodi/bin-kodi ADDONS="audiodecoder.* audioencoder.* inputstream.* peripheral.* pvr.* vfs.* visualization.*"
 
 # inputstream.adaptive has to be built separately because it fails to build due to an issue with widevine support code
-cd ..
-if [ -d "inputstream.adaptive" ]; then
-  rm -rf inputstream.adaptive
-fi
-git clone --branch $BRANCH https://github.com/xbmc/inputstream.adaptive.git
-mkdir inputstream.adaptive/build
-cd inputstream.adaptive/build
-cmake -DADDONS_TO_BUILD=inputstream.adaptive -DADDON_SRC_PREFIX=../.. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/ark/kodi/bin-kodi/ -DPACKAGE_ZIP=1 /home/ark/kodi/kodi-source/cmake/addons/
+#cd ..
+#if [ -d "inputstream.adaptive" ]; then
+  #rm -rf inputstream.adaptive
+#fi
+#git clone --branch $BRANCH https://github.com/xbmc/inputstream.adaptive.git
+#mkdir inputstream.adaptive/build
+#cd inputstream.adaptive/build
+#cmake -DADDONS_TO_BUILD=inputstream.adaptive -DADDON_SRC_PREFIX=../.. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/ark/kodi/bin-kodi/ -DPACKAGE_ZIP=1 /home/ark/kodi/kodi-source/cmake/addons/
 # This sed of inputstream is needed or it won't build for some reason.
-if [[ "$BRANCH" == "Nexus" ]]; then
-  sed -i -e '/if defined(__linux__) && defined(__aarch64__) && !defined(ANDROID)/,+12d' ../wvdecrypter/wvdecrypter.cpp
-elif [[ "$BRANCH" == "Omega" ]]; then
-  sed -i -e '/if defined(__linux__) && (defined(__aarch64__) || defined(__arm64__))/,+13d' ../lib/cdm_aarch64/cdm_loader.cpp
-fi
-make -j$num_proc
-mkdir /home/ark/kodi/bin-kodi/lib/kodi/addons/inputstream.adaptive
-mv -f /home/ark/kodi/bin-kodi/inputstream.adaptive/inputstream.adaptive.so* /home/ark/kodi/bin-kodi/lib/kodi/addons/inputstream.adaptive/.
-mv -f /home/ark/kodi/bin-kodi/inputstream.adaptive/libssd_wv.so /home/ark/kodi/bin-kodi/lib/kodi/addons/inputstream.adaptive/.
-mkdir /home/ark/kodi/bin-kodi/share/kodi/addons/inputstream.adaptive
-mv -f /home/ark/kodi/bin-kodi/inputstream.adaptive/* /home/ark/kodi/bin-kodi/share/kodi/addons/inputstream.adaptive/.
+#if [[ "$BRANCH" == "Nexus" ]]; then
+  #sed -i -e '/if defined(__linux__) && defined(__aarch64__) && !defined(ANDROID)/,+12d' ../wvdecrypter/wvdecrypter.cpp
+#elif [[ "$BRANCH" == "Omega" ]]; then
+  #sed -i -e '/if defined(__linux__) && (defined(__aarch64__) || defined(__arm64__))/,+13d' ../lib/cdm_aarch64/cdm_loader.cpp
+#fi
+#make -j$num_proc
+#mkdir /home/ark/kodi/bin-kodi/lib/kodi/addons/inputstream.adaptive
+#mv -f /home/ark/kodi/bin-kodi/inputstream.adaptive/inputstream.adaptive.so* /home/ark/kodi/bin-kodi/lib/kodi/addons/inputstream.adaptive/.
+#mv -f /home/ark/kodi/bin-kodi/inputstream.adaptive/libssd_wv.so /home/ark/kodi/bin-kodi/lib/kodi/addons/inputstream.adaptive/.
+#mkdir /home/ark/kodi/bin-kodi/share/kodi/addons/inputstream.adaptive
+#mv -f /home/ark/kodi/bin-kodi/inputstream.adaptive/* /home/ark/kodi/bin-kodi/share/kodi/addons/inputstream.adaptive/.
 
 # inputstream.ffmpegdirect has to be built separately because it fails to build due to a minor autotools issue with README vs README.md
 # There's a PR in place to address this as as of 5/11/2024 so this may not be necessary anymore in a little while
@@ -174,25 +174,25 @@ if [ -d "/home/ark/kodi/ForArkOS" ]; then
   rm -rf /home/ark/kodi/ForArkOS/*
 fi
 
-mkdir -p /home/ark/kodi/ForArkOS/opt/kodi/lib/kodi/addons
-mkdir -p /home/ark/kodi/ForArkOS/opt/kodi/share/kodi/addons
+mkdir -p /opt/kodi/lib/kodi/addons
+mkdir -p /opt/kodi/share/kodi/addons
 
 # Let's strip and copy the kodi gbm executable
 strip /home/ark/kodi/kodi-build/kodi-gbm
-cp -fv /home/ark/kodi/kodi-build/kodi-gbm /home/ark/kodi/ForArkOS/opt/kodi/lib/kodi/kodi-gbm
+cp -fv /home/ark/kodi/kodi-build/kodi-gbm /opt/kodi/lib/kodi/kodi-gbm
 # Let's copy the necessary addons needed to successfully launch kodi
-cp -Rfv /home/ark/kodi/kodi-build/addons/* /home/ark/kodi/ForArkOS/opt/kodi/share/kodi/addons/.
-cp -Rfv /home/ark/kodi/kodi-build/media/ /home/ark/kodi/ForArkOS/opt/kodi/share/kodi/.
-cp -Rfv /home/ark/kodi/kodi-build/system/ /home/ark/kodi/ForArkOS/opt/kodi/share/kodi/.
+cp -Rfv /home/ark/kodi/kodi-build/addons/* /opt/kodi/share/kodi/addons/.
+cp -Rfv /home/ark/kodi/kodi-build/media/ /opt/kodi/share/kodi/.
+cp -Rfv /home/ark/kodi/kodi-build/system/ /opt/kodi/share/kodi/.
 # Let's copy the additional binary addons config files built 
-cp -Rfv /home/ark/kodi/bin-kodi/share/kodi/addons/* /home/ark/kodi/ForArkOS/opt/kodi/share/kodi/addons/.
+cp -Rfv /home/ark/kodi/bin-kodi/share/kodi/addons/* /opt/kodi/share/kodi/addons/.
 # Let's finally copy the additional binary addon libs
-cp -Rfv /home/ark/kodi/bin-kodi/lib/* /home/ark/kodi/ForArkOS/opt/kodi/lib/.
+cp -Rfv /home/ark/kodi/bin-kodi/lib/* /opt/kodi/lib/.
 # As an added benefit, create the .xz file for ease of updating ArkOS
-cd /home/ark/kodi/ForArkOS
-VER_NUM=$(echo $KODI_SOURCE_TAG | sed 's/\-.*//')
-tar -cJvf ../Kodi-${VER_NUM}.tar.xz *
-cd /home/ark/kodi
+#cd /home/ark/kodi/ForArkOS
+#VER_NUM=$(echo $KODI_SOURCE_TAG | sed 's/\-.*//')
+#tar -cJvf ../Kodi-${VER_NUM}.tar.xz *
+#cd /home/ark/kodi
 echo ""
-echo "Done! Check /home/ark/kodi/ForArkOS and verify the kodi-gbm binary and addon files are in there and ready to be copied to ArkOS"
+echo "Done!"
 echo ""
