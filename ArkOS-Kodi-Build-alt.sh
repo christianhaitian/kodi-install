@@ -157,16 +157,24 @@ cd inputstream.ffmpegdirect
 cd build
 cmake -DADDONS_TO_BUILD=inputstream.ffmpegdirect -DADDON_SRC_PREFIX=../.. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/ark/kodi/bin-kodi/ -DPACKAGE_ZIP=1 /home/ark/kodi/kodi-source/cmake/addons/
 make -j$num_proc
-#if [[ $? != "0" ]]; then
-  #printf "hmmm...building the ffmpegdirect inputstream addon failed.  Let's try a sed trick to see if that solves the issue"
-  #sleep 5
-  #sed -i "/AM_INIT_AUTOMAKE(\[1.16 check-news dist-bzip2\])/c\AM_INIT_AUTOMAKE(\[1.16 check-news dist-bzip2 foreign\])" build/libzvbi/src/libzvbi/configure.ac
-  #make -j$num_proc
-#fi
-mkdir /home/ark/kodi/bin-kodi/lib/kodi/addons/inputstream.ffmpegdirect
-mv -f /home/ark/kodi/bin-kodi/inputstream.ffmpegdirect/inputstream.ffmpegdirect.so* /home/ark/kodi/bin-kodi/lib/kodi/addons/inputstream.ffmpegdirect/.
-mkdir /home/ark/kodi/bin-kodi/share/kodi/addons/inputstream.ffmpegdirect
-mv -f /home/ark/kodi/bin-kodi/inputstream.ffmpegdirect/* /home/ark/kodi/bin-kodi/share/kodi/addons/inputstream.ffmpegdirect/.
+ERROR=$(echo $?)
+if [[ $ERROR != "0" ]]; then
+  printf "hmmm...building the ffmpegdirect inputstream addon failed.  Let's try a sed trick to see if that solves the issue"
+  sleep 5
+  sed -i "/AM_INIT_AUTOMAKE(\[1.16 check-news dist-bzip2\])/c\AM_INIT_AUTOMAKE(\[1.16 check-news dist-bzip2 foreign\])" build/libzvbi/src/libzvbi/configure.ac
+  make -j$num_proc
+fi
+if [[ $ERROR == "0" ]]; then
+  echo "Yay, ffmpegdirect addon built successfully!"
+  mkdir /home/ark/kodi/bin-kodi/lib/kodi/addons/inputstream.ffmpegdirect
+  mv -f /home/ark/kodi/bin-kodi/inputstream.ffmpegdirect/inputstream.ffmpegdirect.so* /home/ark/kodi/bin-kodi/lib/kodi/addons/inputstream.ffmpegdirect/.
+  mkdir /home/ark/kodi/bin-kodi/share/kodi/addons/inputstream.ffmpegdirect
+  mv -f /home/ark/kodi/bin-kodi/inputstream.ffmpegdirect/* /home/ark/kodi/bin-kodi/share/kodi/addons/inputstream.ffmpegdirect/.
+else
+  echo ""
+  echo "Boo! ffmpegdirect build failed :("
+  echo ""
+fi
 
 # Finally, put everything in place so it can be copied into the ArkOS opt/kodi folder and overwrite the existing setup
 cd /home/ark/kodi
