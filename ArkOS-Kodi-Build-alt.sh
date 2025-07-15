@@ -50,14 +50,14 @@ if [[ -z $(git ls-remote https://github.com/xbmc/xbmc.git --h --sort origin "ref
   echo ""
   exit 1
 fi
-git clone https://github.com/xbmc/xbmc.git kodi-source
-cd kodi-source
-git checkout ${KODI_SOURCE_TAG}
+git clone --branch ${KODI_SOURCE_TAG} --depth 1 https://github.com/xbmc/xbmc.git kodi-source
 if [ $? != 0 ]; then
-  echo "Could not checkout the $BRANCH tag."
+  echo "Could not clone the ${KODI_SOURCE_TAG} tag of Kodi."
   echo ""
   exit 1
 fi
+
+cd kodi-source
 
 # Creates build directory and configures Kodi build.
 
