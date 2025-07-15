@@ -145,36 +145,36 @@ make -j$num_proc -C tools/depends/target/binary-addons PREFIX=/home/ark/kodi/bin
 
 # inputstream.ffmpegdirect has to be built separately because it fails to build due to some nettle library nonsense
 # I don't currently understand or care to try to figure out at the moment
-cd ..
-if [ -d "inputstream.ffmpegdirect" ]; then
-  rm -rf inputstream.ffmpegdirect
-fi
-git clone --branch $BRANCH https://github.com/xbmc/inputstream.ffmpegdirect.git
+#cd ..
+#if [ -d "inputstream.ffmpegdirect" ]; then
+  #rm -rf inputstream.ffmpegdirect
+#fi
+#git clone --branch $BRANCH https://github.com/xbmc/inputstream.ffmpegdirect.git
 #wget https://patch-diff.githubusercontent.com/raw/xbmc/inputstream.ffmpegdirect/pull/297.patch -O inputstream.ffmpegdirect/depends/common/libzvbi/0010-fix-building-without-README.patch
-mkdir inputstream.ffmpegdirect/build
-cd inputstream.ffmpegdirect
+#mkdir inputstream.ffmpegdirect/build
+#cd inputstream.ffmpegdirect
 #patch -Np1 < ../kodi-install/patches/inputstream-ffmpegdirect/inputstream-ffmpegdirect.patch
-cd build
-cmake -DADDONS_TO_BUILD=inputstream.ffmpegdirect -DADDON_SRC_PREFIX=../.. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/ark/kodi/bin-kodi/ -DPACKAGE_ZIP=1 /home/ark/kodi/kodi-source/cmake/addons/
-make -j$num_proc
-ERROR=$(echo $?)
-if [[ $ERROR != "0" ]]; then
-  printf "hmmm...building the ffmpegdirect inputstream addon failed.  Let's try a sed trick to see if that solves the issue"
-  sleep 5
-  sed -i "/AM_INIT_AUTOMAKE(\[1.16 check-news dist-bzip2\])/c\AM_INIT_AUTOMAKE(\[1.16 check-news dist-bzip2 foreign\])" build/libzvbi/src/libzvbi/configure.ac
-  make -j$num_proc
-fi
-if [[ $ERROR == "0" ]]; then
-  echo "Yay, ffmpegdirect addon built successfully!"
-  mkdir /home/ark/kodi/bin-kodi/lib/kodi/addons/inputstream.ffmpegdirect
-  mv -f /home/ark/kodi/bin-kodi/inputstream.ffmpegdirect/inputstream.ffmpegdirect.so* /home/ark/kodi/bin-kodi/lib/kodi/addons/inputstream.ffmpegdirect/.
-  mkdir /home/ark/kodi/bin-kodi/share/kodi/addons/inputstream.ffmpegdirect
-  mv -f /home/ark/kodi/bin-kodi/inputstream.ffmpegdirect/* /home/ark/kodi/bin-kodi/share/kodi/addons/inputstream.ffmpegdirect/.
-else
-  echo ""
-  echo "Boo! ffmpegdirect build failed :("
-  echo ""
-fi
+#cd build
+#cmake -DADDONS_TO_BUILD=inputstream.ffmpegdirect -DADDON_SRC_PREFIX=../.. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/ark/kodi/bin-kodi/ -DPACKAGE_ZIP=1 /home/ark/kodi/kodi-source/cmake/addons/
+#make -j$num_proc
+#ERROR=$(echo $?)
+#if [[ $ERROR != "0" ]]; then
+  #printf "hmmm...building the ffmpegdirect inputstream addon failed.  Let's try a sed trick to see if that solves the issue"
+  #sleep 5
+  #sed -i "/AM_INIT_AUTOMAKE(\[1.16 check-news dist-bzip2\])/c\AM_INIT_AUTOMAKE(\[1.16 check-news dist-bzip2 foreign\])" build/libzvbi/src/libzvbi/configure.ac
+  #make -j$num_proc
+#fi
+#if [[ $ERROR == "0" ]]; then
+  #echo "Yay, ffmpegdirect addon built successfully!"
+  #mkdir /home/ark/kodi/bin-kodi/lib/kodi/addons/inputstream.ffmpegdirect
+  #mv -f /home/ark/kodi/bin-kodi/inputstream.ffmpegdirect/inputstream.ffmpegdirect.so* /home/ark/kodi/bin-kodi/lib/kodi/addons/inputstream.ffmpegdirect/.
+  #mkdir /home/ark/kodi/bin-kodi/share/kodi/addons/inputstream.ffmpegdirect
+  #mv -f /home/ark/kodi/bin-kodi/inputstream.ffmpegdirect/* /home/ark/kodi/bin-kodi/share/kodi/addons/inputstream.ffmpegdirect/.
+#else
+  #echo ""
+  #echo "Boo! ffmpegdirect build failed :("
+  #echo ""
+#fi
 
 # Finally, put everything in place so it can be copied into the ArkOS opt/kodi folder and overwrite the existing setup
 cd /home/ark/kodi
