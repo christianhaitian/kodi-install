@@ -121,6 +121,10 @@ fi
 rm -f /home/ark/kodi/kodi-source/tools/depends/target/binary-addons/.installed-native
 make -j$num_proc -C tools/depends/target/binary-addons PREFIX=/home/ark/kodi/bin-kodi ADDONS="audiodecoder.* audioencoder.* inputstream.* peripheral.* pvr.* vfs.* visualization.*"
 
+# inputstream.ffmpegdirect needs to be built a second time for it to succeed ¯\_(ツ)_/¯
+rm -f /home/ark/kodi/kodi-source/tools/depends/target/binary-addons/.installed-native
+make -j$num_proc -C tools/depends/target/binary-addons PREFIX=/home/ark/kodi/bin-kodi ADDONS="inputstream.ffmpegdirect"
+
 # inputstream.adaptive has to be built separately because it fails to build due to an issue with widevine support code
 #cd ..
 #if [ -d "inputstream.adaptive" ]; then
