@@ -1,0 +1,13 @@
+diff --git a/xbmc/cores/AudioEngine/Sinks/pipewire/PipewireNode.cpp b/xbmc/cores/AudioEngine/Sinks/pipewire/PipewireNode.cpp
+index bbb4cd9c31746..14d7dcce6d8dc 100644
+--- a/xbmc/cores/AudioEngine/Sinks/pipewire/PipewireNode.cpp
++++ b/xbmc/cores/AudioEngine/Sinks/pipewire/PipewireNode.cpp
+@@ -40,7 +40,8 @@ void CPipewireNode::EnumerateFormats()
+   for (uint32_t param = 0; param < m_info->n_params; param++)
+   {
+     if (m_info->params[param].id == SPA_PARAM_EnumFormat)
+-      pw_node_enum_params(m_proxy.get(), 0, m_info->params[param].id, 0, 0, NULL);
++      pw_node_enum_params(reinterpret_cast<struct pw_node*>(m_proxy.get()), 0,
++                          m_info->params[param].id, 0, 0, NULL);
+   }
+ }
