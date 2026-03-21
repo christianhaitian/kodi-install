@@ -82,7 +82,7 @@ cd ../kodi-build
 if [ -d "/home/ark/kodi/bin-kodi" ]; then
   rm -rf /home/ark/kodi/bin-kodi
 fi
-cmake ../kodi-source -DCMAKE_INSTALL_PREFIX=/home/ark/kodi/bin-kodi -DENABLE_INTERNAL_PCRE=ON -DCORE_PLATFORM_NAME=gbm -DAPP_RENDER_SYSTEM=gles -DENABLE_GBM=ON -DENABLE_VAAPI=OFF -DENABLE_VDPAU=OFF -DENABLE_X11=OFF -DENABLE_WAYLAND=OFF
+cmake ../kodi-source -DCMAKE_INSTALL_PREFIX=/home/ark/kodi/bin-kodi -DENABLE_INTERNAL_PCRE=ON -DCORE_PLATFORM_NAME=gbm -DAPP_RENDER_SYSTEM=gles -DENABLE_GBM=ON -DENABLE_VAAPI=OFF -DENABLE_VDPAU=OFF -DENABLE_X11=OFF -DENABLE_WAYLAND=OFF -DENABLE_INTERNAL_FFMPEG=OFF
 if [ $? != 0 ]; then
   echo ""
   echo "There was an issue with configuring the kodi source.  Stopping here."
