@@ -1,6 +1,7 @@
-diff -Naur xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererDRMPRIMEGLES.cpp /tmp/kodi_new/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererDRMPRIMEGLES.cpp
---- xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererDRMPRIMEGLES.cpp	2026-07-01 22:24:21.517608067 +0000
-+++ /tmp/kodi_new/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererDRMPRIMEGLES.cpp	2026-07-01 22:24:22.578717742 +0000
+diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererDRMPRIMEGLES.cpp b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererDRMPRIMEGLES.cpp
+index ed60528..cac7ee3 100644
+--- a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererDRMPRIMEGLES.cpp
++++ b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererDRMPRIMEGLES.cpp
 @@ -22,10 +22,75 @@
  #include "windowing/WinSystem.h"
  #include "windowing/linux/WinSystemEGL.h"
@@ -77,7 +78,7 @@ diff -Naur xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererDRMPRIMEGLE
  CRendererDRMPRIMEGLES::~CRendererDRMPRIMEGLES()
  {
    Flush(false);
-@@ -83,6 +148,9 @@
+@@ -83,6 +148,9 @@ bool CRendererDRMPRIMEGLES::Configure(const VideoPicture& picture,
    m_sourceHeight = picture.iHeight;
    m_renderOrientation = orientation;
  
@@ -87,9 +88,10 @@ diff -Naur xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererDRMPRIMEGLE
    m_iFlags = GetFlagsChromaPosition(picture.chroma_position) |
               GetFlagsColorMatrix(picture.color_space, picture.iWidth, picture.iHeight) |
               GetFlagsColorPrimaries(picture.color_primaries) |
-diff -Naur xbmc/windowing/GraphicContext.cpp /tmp/kodi_new/xbmc/windowing/GraphicContext.cpp
---- xbmc/windowing/GraphicContext.cpp	2026-07-01 22:24:21.508696631 +0000
-+++ /tmp/kodi_new/xbmc/windowing/GraphicContext.cpp	2026-07-01 22:24:22.578168407 +0000
+diff --git a/xbmc/windowing/GraphicContext.cpp b/xbmc/windowing/GraphicContext.cpp
+index e3300e9..b92fe40 100644
+--- a/xbmc/windowing/GraphicContext.cpp
++++ b/xbmc/windowing/GraphicContext.cpp
 @@ -27,7 +27,73 @@
  #include "utils/log.h"
  
@@ -164,7 +166,7 @@ diff -Naur xbmc/windowing/GraphicContext.cpp /tmp/kodi_new/xbmc/windowing/Graphi
  
  CGraphicContext::CGraphicContext() = default;
  CGraphicContext::~CGraphicContext() = default;
-@@ -692,9 +758,60 @@
+@@ -692,9 +758,60 @@ void CGraphicContext::GetGUIScaling(const RESOLUTION_INFO &res, float &scaleX, f
      scaleY = fFromHeight / fToHeight;
      if (matrix)
      {
