@@ -1,0 +1,230 @@
+diff -Naur xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererDRMPRIMEGLES.cpp /tmp/kodi_new/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererDRMPRIMEGLES.cpp
+--- xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererDRMPRIMEGLES.cpp	2026-07-01 22:24:21.517608067 +0000
++++ /tmp/kodi_new/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererDRMPRIMEGLES.cpp	2026-07-01 22:24:22.578717742 +0000
+@@ -22,10 +22,75 @@
+ #include "windowing/WinSystem.h"
+ #include "windowing/linux/WinSystemEGL.h"
+ 
++#include <cctype>
++#include <cstdlib>
++#include <fstream>
+ #include <memory>
++#include <string>
+ 
+ using namespace KODI::UTILS::EGL;
+ 
++
++namespace
++{
++bool MiniLoongDeviceFileMatches()
++{
++  std::ifstream deviceFile("/home/ark/.config/.DEVICE");
++  std::string device;
++  if (!deviceFile || !std::getline(deviceFile, device))
++    return false;
++
++  for (auto& c : device)
++    c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
++
++  return device.find("miniloong") != std::string::npos;
++}
++
++bool OutputNameIsHDMI(std::string output)
++{
++  for (auto& c : output)
++    c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
++
++  return output.find("hdmi") != std::string::npos;
++}
++
++bool MiniLoongHDMIConnected()
++{
++  auto winSystem = CServiceBroker::GetWinSystem();
++  if (!winSystem)
++    return false;
++
++  for (const auto& output : winSystem->GetConnectedOutputs())
++  {
++    if (OutputNameIsHDMI(output))
++      return true;
++  }
++
++  return false;
++}
++
++bool IsMiniLoongInternalDisplayRotationEnabled()
++{
++  if (const char* env = std::getenv("KODI_MINILOONG_ROTATE"))
++  {
++    std::string value(env);
++    for (auto& c : value)
++      c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
++
++    if (value == "0" || value == "false" || value == "no" || value == "off")
++      return false;
++  }
++
++  if (!MiniLoongDeviceFileMatches())
++    return false;
++
++  if (MiniLoongHDMIConnected())
++    return false;
++
++  return true;
++}
++}
++
+ CRendererDRMPRIMEGLES::~CRendererDRMPRIMEGLES()
+ {
+   Flush(false);
+@@ -83,6 +148,9 @@
+   m_sourceHeight = picture.iHeight;
+   m_renderOrientation = orientation;
+ 
++  if (IsMiniLoongInternalDisplayRotationEnabled())
++    m_renderOrientation = (m_renderOrientation + 270) % 360;
++
+   m_iFlags = GetFlagsChromaPosition(picture.chroma_position) |
+              GetFlagsColorMatrix(picture.color_space, picture.iWidth, picture.iHeight) |
+              GetFlagsColorPrimaries(picture.color_primaries) |
+diff -Naur xbmc/windowing/GraphicContext.cpp /tmp/kodi_new/xbmc/windowing/GraphicContext.cpp
+--- xbmc/windowing/GraphicContext.cpp	2026-07-01 22:24:21.508696631 +0000
++++ /tmp/kodi_new/xbmc/windowing/GraphicContext.cpp	2026-07-01 22:24:22.578168407 +0000
+@@ -27,7 +27,73 @@
+ #include "utils/log.h"
+ 
+ #include <cassert>
++#include <cctype>
++#include <cstdlib>
++#include <fstream>
+ #include <mutex>
++#include <string>
++
++
++
++namespace
++{
++bool MiniLoongDeviceFileMatches()
++{
++  std::ifstream deviceFile("/home/ark/.config/.DEVICE");
++  std::string device;
++  if (!deviceFile || !std::getline(deviceFile, device))
++    return false;
++
++  for (auto& c : device)
++    c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
++
++  return device.find("miniloong") != std::string::npos;
++}
++
++bool OutputNameIsHDMI(std::string output)
++{
++  for (auto& c : output)
++    c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
++
++  return output.find("hdmi") != std::string::npos;
++}
++
++bool MiniLoongHDMIConnected()
++{
++  auto winSystem = CServiceBroker::GetWinSystem();
++  if (!winSystem)
++    return false;
++
++  for (const auto& output : winSystem->GetConnectedOutputs())
++  {
++    if (OutputNameIsHDMI(output))
++      return true;
++  }
++
++  return false;
++}
++
++bool IsMiniLoongInternalDisplayRotationEnabled()
++{
++  if (const char* env = std::getenv("KODI_MINILOONG_ROTATE"))
++  {
++    std::string value(env);
++    for (auto& c : value)
++      c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
++
++    if (value == "0" || value == "false" || value == "no" || value == "off")
++      return false;
++  }
++
++  if (!MiniLoongDeviceFileMatches())
++    return false;
++
++  if (MiniLoongHDMIConnected())
++    return false;
++
++  return true;
++}
++}
+ 
+ CGraphicContext::CGraphicContext() = default;
+ CGraphicContext::~CGraphicContext() = default;
+@@ -692,9 +758,60 @@
+     scaleY = fFromHeight / fToHeight;
+     if (matrix)
+     {
+-      TransformMatrix guiScaler = TransformMatrix::CreateScaler(fToWidth / fFromWidth, fToHeight / fFromHeight, fToHeight / fFromHeight);
+-      TransformMatrix guiOffset = TransformMatrix::CreateTranslation(fToPosX, fToPosY);
+-      *matrix = guiOffset * guiScaler;
++      if (IsMiniLoongInternalDisplayRotationEnabled())
++      {
++        constexpr float halfPi = 1.57079632679489661923f;
++
++        /*
++         * MiniLoong's internal panel is scanned as a 720x960 portrait
++         * framebuffer, but the handheld is used as a 960x720 landscape
++         * device. Build Kodi's GUI in logical 960x720 first, then rotate
++         * that complete landscape coordinate space into the physical
++         * 720x960 framebuffer:
++         *
++         *   physical_x = logical_y
++         *   physical_y = logical_width - logical_x
++         *
++         * The quirk is disabled whenever an HDMI connector is connected,
++         * so HDMI output keeps Kodi's normal unrotated behavior.
++         */
++        const float logicalWidth = static_cast<float>(info.iHeight);
++        const float logicalHeight = static_cast<float>(info.iWidth);
++
++        float logicalToPosX = 0.0f;
++        float logicalToPosY = 0.0f;
++        float logicalToWidth = logicalWidth;
++        float logicalToHeight = logicalHeight;
++
++        float fZoom = (100 + CServiceBroker::GetSettingsComponent()->GetSettings()->GetInt(CSettings::SETTING_LOOKANDFEEL_SKINZOOM)) * 0.01f;
++
++        fZoom -= 1.0f;
++        logicalToPosX -= logicalToWidth * fZoom * 0.5f;
++        logicalToWidth *= fZoom + 1.0f;
++
++        fZoom = fZoom / info.fPixelRatio;
++        logicalToPosY -= logicalToHeight * fZoom * 0.5f;
++        logicalToHeight *= fZoom + 1.0f;
++
++        scaleX = fFromWidth / logicalToWidth;
++        scaleY = fFromHeight / logicalToHeight;
++
++        TransformMatrix guiScaler = TransformMatrix::CreateScaler(logicalToWidth / fFromWidth,
++                                                                  logicalToHeight / fFromHeight,
++                                                                  logicalToHeight / fFromHeight);
++        TransformMatrix guiOffset = TransformMatrix::CreateTranslation(logicalToPosX,
++                                                                       logicalToPosY);
++        TransformMatrix rotate270 = TransformMatrix::CreateTranslation(0.0f, logicalWidth) *
++                                    TransformMatrix::CreateZRotation(-halfPi, 0.0f, 0.0f);
++
++        *matrix = rotate270 * guiOffset * guiScaler;
++      }
++      else
++      {
++        TransformMatrix guiScaler = TransformMatrix::CreateScaler(fToWidth / fFromWidth, fToHeight / fFromHeight, fToHeight / fFromHeight);
++        TransformMatrix guiOffset = TransformMatrix::CreateTranslation(fToPosX, fToPosY);
++        *matrix = guiOffset * guiScaler;
++      }
+     }
+   }
+   else
